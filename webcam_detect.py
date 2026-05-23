@@ -1,7 +1,8 @@
 import cv2
 from ultralytics import YOLO
 
-model = YOLO("yolov8n.pt")
+# Use a larger model for better accuracy than yolov8n
+model = YOLO("yolov8s.pt")
 
 # CAP_DSHOW fixes webcam detection on Windows
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
@@ -15,7 +16,8 @@ while True:
         print("Can't access webcam")
         break
 
-    results = model(frame, verbose=False)
+    # Increase confidence threshold and keep a stable IoU for cleaner detections
+    results = model(frame, conf=0.4, iou=0.5, verbose=False)
     count = len(results[0].boxes)
     annotated_frame = results[0].plot()
 
